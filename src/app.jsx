@@ -1,5 +1,5 @@
 import styles from './app.module.css';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import SearchHeader from './components/search_header/search_header';
 import VideoDetail from './components/video_detail/video_detail';
 import VideoList from './components/video_list/video_list';
@@ -14,20 +14,24 @@ function App({ youtube }) {
       .then((videos) => setVideos(videos));
   }, [youtube]);
 
-  const search = (query) => {
+  const search = useCallback((query) => {
     setSelectedVideo(null);
     youtube
       .search(query) //
       .then((videos) => setVideos(videos));
-  };
+  }, []);
 
   const selectVideo = (video) => {
     setSelectedVideo(video);
   };
 
+  const onLogoClick = () => {
+    setSelectedVideo(null);
+  };
+
   return (
     <div className={styles.app}>
-      <SearchHeader onSearch={search} />
+      <SearchHeader onSearch={search} onLogoClick={onLogoClick} />
       <section className={styles.content}>
         {selectedVideo && (
           <div className={styles.detail}>
